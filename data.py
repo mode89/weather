@@ -1,4 +1,4 @@
-import time
+import datetime
 
 def celcius(fahr):
     return (fahr - 32) * 5 / 9
@@ -21,7 +21,7 @@ class Record:
         self.stn = vals[0]
 
         # Date
-        self.date = time.strptime(vals[2], "%Y%m%d")
+        self.date = datetime.datetime.strptime(vals[2], "%Y%m%d").date()
 
         # Mean temperature
         if vals[3] <> "9999.9":
