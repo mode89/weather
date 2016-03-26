@@ -45,3 +45,22 @@ if __name__ == "__main__" :
     print("{0} missing records".format(missdays_cnt))
     print("{0} missing values".format(missvals_cnt))
     print("{0} parameters".format(len(PARAMETERS)))
+
+    print("Calibrating...")
+    input_cnt = len(PARAMETERS) * len(stations)
+    min_values = [float("inf")] * input_cnt
+    max_values = [float("-inf")] * input_cnt
+    for day in daterange(START_DATE, END_DATE):
+        values = list()
+        for s in stations:
+            record = stations[s][day]
+            for p in PARAMETERS:
+                values.append(getattr(record, p))
+        for i in range(input_cnt):
+            if values[i] is not None:
+                min_values[i] = min(float(values[i]), min_values[i])
+                max_values[i] = max(float(values[i]), max_values[i])
+    input_scaling = [1.0 / (max_values[i] - min_values[i])
+        for i in range(input_cnt)]
+    input_bias = [-0.5 * (max_values[i] - min_values[i])
+        for i in range(input_cnt)]
